@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled  from 'styled-components';
 import HeroSection from './Components/HeroSection';
+// import { useProductContext } from './context/productcontext';
 
 const About = () => {
+  // const myName = useProductContext();
   const storeName = "About Us"
   return (
-    <HeroSection storeName={storeName}/>
+    <>
+      {/* {myName} */}
+      <HeroSection storeName={storeName}/>
+    </>
   )
 }
 
-const Wrapper = styled.section`
+// const Wrapper = styled.section`
 
-`;
+// `;
 
 export default About

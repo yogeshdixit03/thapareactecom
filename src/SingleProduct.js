@@ -1,13 +1,86 @@
 import styled from "styled-components";
-
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useProductContext } from "./context/productcontext";
+import PageNavigation from "./Components/PageNavigation";
+import MyImage from "./Components/MyImage";
+import { Container } from "./styles/Container";
+import FormatPrice from "./Helpers/FormatPrice";
+import {TbTruckDelivery, TbReplace} from "react-icons/tb";
+import {MdSecurity} from "react-icons/md";
+import Stars from "./Components/Stars";
+const API = "https://api.pujakaitem.com/api/products";
 const SingleProduct= ()=>{
-  // return <h1>SIngle Products</h1>
-  return <Wrapper></Wrapper>;
+  const {getSingleProduct, isSingleLoading, singleProduct} = useProductContext();
+  const {id} = useParams();
+  const {id:alias, name,company,category,price,description,stars,stock,reviews,image} = singleProduct;
+  useEffect(()=>{
+    getSingleProduct(`${API}?id=${id}`)
+  },[])
+  
+  if(isSingleLoading){
+    return <div className="page_loading">...Loading</div>
+  }
+  return <Wrapper>
+    {/* <PageNavigation title={name}/> */}
+    <Container className="container">
+      <div className="grid grid-two-column">
+          <div className="product_images">
+            <MyImage imgs={image}/>
+          </div>
+
+          <div className="product-data">
+            <h2>{name}</h2>
+            
+            <div className="product-data-info">
+              <p>
+                <span style={stock>0 ? {color: "green"}: {color: "red"}}> {stock>0 ? "In Stock" : "Out of Stock"}</span>
+              </p>
+              {/* <p>ID: <span>{id}</span></p> */}
+              {/* <p>Brand: <span>{company}</span></p> */}
+            </div>
+            <Stars stars={stars} reviews={reviews}/>
+            <p className="product-data-price">
+              MRP:
+              <del>
+                <FormatPrice price={price + 25000}/>
+              </del>
+            </p>
+            <p className="product-data-price product-data-real-price">
+              Deal of the day: <FormatPrice price={price} />
+            </p>
+            <p>{description}</p>
+            <div className="product-data-warranty">
+                <div className="product-warranty-data">
+                  <TbTruckDelivery className="warranty-icon" />
+                  <p>Free Delivery</p>
+                </div>
+                <div className="product-warranty-data">
+                  <TbReplace className="warranty-icon" />
+                  <p>30 Days Replacement</p>
+                </div>
+                <div className="product-warranty-data">
+                  <TbTruckDelivery className="warranty-icon" />
+                  <p>Dixit Delivered</p>
+                </div>
+                <div className="product-warranty-data">
+                  <MdSecurity className="warranty-icon" />
+                  <p>2 Year Warranty</p>
+                </div>
+              </div>
+          </div>  
+      </div>
+    </Container>
+  </Wrapper>;
 }
 
 const Wrapper = styled.section`
   .container {
     padding: 9rem 0;
+  }
+  .product_images{
+    display:flex;
+    align-items:center;
   }
   .product-data {
     display: flex;
